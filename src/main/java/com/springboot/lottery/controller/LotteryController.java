@@ -1,6 +1,8 @@
 package com.springboot.lottery.controller;
 
+import com.springboot.lottery.service.LotteryService;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,12 +14,14 @@ import javax.annotation.Resource;
 public class LotteryController {
 
     @Resource
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private LotteryService lotteryService;
 
     @GetMapping("/win")
-    public String win() {
-
-        return "success";
+    public String win(String userId) {
+        if(StringUtils.isEmpty(userId)) {
+            return "用户ID不能为空";
+        }
+        return lotteryService.win(userId);
     }
 
 }

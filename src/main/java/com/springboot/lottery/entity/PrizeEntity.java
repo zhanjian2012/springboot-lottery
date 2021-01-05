@@ -12,9 +12,12 @@ public class PrizeEntity implements java.io.Serializable{
     private Integer prizeType;
 
     // 总库存
-    private Integer totalStock;
+    private Integer prizeTotal;
 
     // 剩余库存
     private Integer surplusStock;
+
+    //概率
+    private double percentage;
 
 }
