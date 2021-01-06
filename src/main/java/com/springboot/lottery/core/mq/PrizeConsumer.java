@@ -22,7 +22,7 @@ public class PrizeConsumer {
     private String activityId;
 
     @KafkaListener(groupId = "prize-consumer-group", topics = "prize-consumer")
-    public void listen(Object prizeId) {
+    public void listen(String prizeId) {
         String prizeKey = String.format(RedisConstants.ACTIVITY_PRIZE_LIST, activityId);
         PrizeEntity prizeEntity = (PrizeEntity) redisTemplate.opsForHash().get(prizeKey, prizeId.toString());
         log.error("抽中奖品：{}", prizeEntity);

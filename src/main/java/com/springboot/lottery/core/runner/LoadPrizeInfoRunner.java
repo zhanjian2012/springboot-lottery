@@ -111,12 +111,12 @@ public class LoadPrizeInfoRunner implements CommandLineRunner {
         }
 
         // 计算实物和虚拟物奖品的分布和概率
-        List<String> physicalIdList = prizeIdList(physicalList, physicalPercentage, physicalNum);
+        List<Object> physicalIdList = prizeIdList(physicalList, physicalPercentage, physicalNum);
         log.info("实物{}个，具体={}", physicalIdList.size(), physicalIdList);
         String physicalKey = String.format(RedisConstants.ACTIVITY_PHYSICAL_PRIZE_ID_LIST, activityId);
         redisTemplate.opsForList().rightPushAll(physicalKey, physicalIdList);
 
-        List<String> virtualIdList = prizeIdList(virtualList, virtualPercentage, virtualNum);
+        List<Object> virtualIdList = prizeIdList(virtualList, virtualPercentage, virtualNum);
         log.info("虚物{}个，具体={}", virtualIdList.size(), virtualIdList);
         String virtualKey = String.format(RedisConstants.ACTIVITY_VIRTUAL_PRIZE_ID_LIST, activityId);
         redisTemplate.opsForList().rightPushAll(virtualKey, virtualIdList);
@@ -139,8 +139,8 @@ public class LoadPrizeInfoRunner implements CommandLineRunner {
     /**
      * 计算奖品的概率分布
      */
-    private List<String> prizeIdList(List<PrizeEntity> list, int percentage, int prizeNum) {
-        List<String> ids = new ArrayList<>();
+    private List<Object> prizeIdList(List<PrizeEntity> list, int percentage, int prizeNum) {
+        List<Object> ids = new ArrayList<>();
         for (int m = 0; m < prizeNum; m++) {
             int rand = new Random().nextInt(percentage);
             int temp = 0;

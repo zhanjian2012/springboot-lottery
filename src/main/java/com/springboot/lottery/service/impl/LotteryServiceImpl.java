@@ -41,16 +41,22 @@ public class LotteryServiceImpl implements LotteryService {
         String virtualKey = String.format(RedisConstants.ACTIVITY_VIRTUAL_PRIZE_ID_LIST, activityId);
         // 实物列表
         String physicalKey = String.format(RedisConstants.ACTIVITY_PHYSICAL_PRIZE_ID_LIST, activityId);
+        // 用户实物中奖key
+        String userPhysicalKey = String.format(RedisConstants.ACTIVITY_USER_PHYSICAL_PRIZE, activityId, userId);
 
         //判断是否中过实物奖
         if (hasPhysicalPrize(userId)) {
             // 已经实物中过奖
             prizeId = redisTemplate.opsForList().leftPop(virtualKey);
+            // 实物中奖
+            redisTemplate.opsForValue().set(userPhysicalKey, prizeId);
         } else {
             // 实物没中奖，进行计算概率，奖品是否是实物，如果是实物，进行实物抽奖，如果实物没有库存，则进行虚物抽奖
             //                                        如果是虚物，进行虚物抽奖
             if (prizeIsPhysical()) {
                 prizeId = redisTemplate.opsForList().leftPop(physicalKey);
+                // 实物中奖
+                redisTemplate.opsForValue().set(userPhysicalKey, prizeId);
             }
             if (Objects.isNull(prizeId)) {
                 prizeId = redisTemplate.opsForList().leftPop(virtualKey);
