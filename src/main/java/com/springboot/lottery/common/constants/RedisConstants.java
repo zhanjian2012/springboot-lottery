@@ -8,13 +8,13 @@ public final class RedisConstants {
     /**
      * 实物奖品ID队列redis-key
      */
-    public static final String ACTIVITY_PHYSICAL_PRIZE_ID_LIST = "activity:%s::physical:prizeIdList";
+    public static final String ACTIVITY_PHYSICAL_PRIZE_ID_LIST = "activity:%s::physicalPrizeIdList";
 
 
     /**
      * 虚拟奖品ID队列redis-key
      */
-    public static final String ACTIVITY_VIRTUAL_PRIZE_ID_LIST = "activity:%s::virtual:prizeIdList";
+    public static final String ACTIVITY_VIRTUAL_PRIZE_ID_LIST = "activity:%s::virtualPrizeIdList";
 
     /**
      * 总库存
@@ -52,5 +52,11 @@ public final class RedisConstants {
      * 活动奖品中奖列表
      */
     public static final String ACTIVITY_PRIZED = "activity:%s::prized::%s";
+
+
+    /**
+     * 活动奖品中奖列表
+     */
+    public static final String ACTIVITY_PRIZED_TOPIC = "activity:%s::topic";
 
 }

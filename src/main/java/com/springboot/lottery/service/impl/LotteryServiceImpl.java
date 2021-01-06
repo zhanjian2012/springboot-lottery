@@ -1,6 +1,7 @@
 package com.springboot.lottery.service.impl;
 
 import com.springboot.lottery.common.constants.RedisConstants;
+import com.springboot.lottery.core.listener.Publisher;
 import com.springboot.lottery.entity.PrizeEntity;
 import com.springboot.lottery.service.LotteryService;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,9 @@ public class LotteryServiceImpl implements LotteryService {
     @Resource
     private KafkaTemplate<String, Object> kafkaTemplate;
 
+    @Resource
+    private Publisher publisher;
+
     @Value("${lottery.activity.id:}")
     private String activityId;
 
@@ -32,7 +36,7 @@ public class LotteryServiceImpl implements LotteryService {
         validateStock();
 
         //校验是否正在抽奖，抽奖间隔1秒
-        validateLottering(userId);
+//        validateLottering(userId);
 
         // 奖品信息
         Object prizeId = null;
@@ -48,8 +52,6 @@ public class LotteryServiceImpl implements LotteryService {
         if (hasPhysicalPrize(userId)) {
             // 已经实物中过奖
             prizeId = redisTemplate.opsForList().leftPop(virtualKey);
-            // 实物中奖
-            redisTemplate.opsForValue().set(userPhysicalKey, prizeId);
         } else {
             // 实物没中奖，进行计算概率，奖品是否是实物，如果是实物，进行实物抽奖，如果实物没有库存，则进行虚物抽奖
             //                                        如果是虚物，进行虚物抽奖
@@ -67,7 +69,10 @@ public class LotteryServiceImpl implements LotteryService {
         if (Objects.nonNull(prizeId)) {
             String prizeKey = String.format(RedisConstants.ACTIVITY_PRIZE_LIST, activityId);
             PrizeEntity prizeEntity = (PrizeEntity) redisTemplate.opsForHash().get(prizeKey, prizeId.toString());
-            kafkaTemplate.send("prize-consumer", prizeId);
+
+            // 发消息
+            String topic = String.format(RedisConstants.ACTIVITY_PRIZED_TOPIC, activityId);
+            publisher.sendMessage(topic, prizeId);
             return "恭喜您获得奖品：" + prizeEntity.getPrizeName();
         } else {
             return "奖品已抽完";
