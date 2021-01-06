@@ -57,13 +57,14 @@ public class LotteryServiceImpl implements LotteryService {
             }
         }
 
+        // 如果奖品不为空，则异步发消息，并提示已中奖
         if (Objects.nonNull(prizeId)) {
             String prizeKey = String.format(RedisConstants.ACTIVITY_PRIZE_LIST, activityId);
             PrizeEntity prizeEntity = (PrizeEntity) redisTemplate.opsForHash().get(prizeKey, prizeId.toString());
             kafkaTemplate.send("prize-consumer", prizeId);
             return "恭喜您获得奖品：" + prizeEntity.getPrizeName();
         } else {
-            return "活动太火爆，稍后再试";
+            return "奖品已抽完";
         }
     }
 
