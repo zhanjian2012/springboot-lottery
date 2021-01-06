@@ -2,5 +2,5 @@ package com.springboot.lottery.service;
 
 public interface LotteryService {
 
-    String win(String userId);
+    String win(String userId) throws Exception;
 }

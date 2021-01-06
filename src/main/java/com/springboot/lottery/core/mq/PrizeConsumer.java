@@ -26,7 +26,6 @@ public class PrizeConsumer {
         String prizeKey = "prizeList:" + activityId;
         PrizeEntity prizeEntity = (PrizeEntity)redisTemplate.opsForHash().get(prizeKey, prizeId);
         log.error("抽中奖品：{}", prizeEntity);
-
         if(Objects.nonNull(prizeEntity)) {
             prizeEntity.setSurplusStock(prizeEntity.getSurplusStock() - 1);
             redisTemplate.opsForHash().put(prizeKey, prizeEntity.getId().toString(), prizeEntity);
