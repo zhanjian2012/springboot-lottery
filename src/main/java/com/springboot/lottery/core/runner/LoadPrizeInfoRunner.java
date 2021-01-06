@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -50,6 +51,12 @@ public class LoadPrizeInfoRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        log.info("开始清除所有缓存信息...");
+        Set<String> keys = redisTemplate.keys("*");
+        redisTemplate.delete(keys);
+        log.info("结束清除所有缓存信息...");
+
         log.info("开始加载奖品信息...");
 
         // 模拟奖品列表
@@ -68,8 +75,9 @@ public class LoadPrizeInfoRunner implements CommandLineRunner {
      * 设置奖品列表到redisHash中
      */
     private void setPrizeList2RedisHash(List<PrizeEntity> list) {
+        String prizeListKey = String.format(RedisConstants.ACTIVITY_PRIZE_LIST, activityId);
         for (PrizeEntity pe : list) {
-            redisTemplate.opsForHash().put(RedisConstants.ACTIVITY_PRIZE_LIST, pe.getId().toString(), pe);
+            redisTemplate.opsForHash().put(prizeListKey, pe.getId().toString(), pe);
         }
     }
 
