@@ -17,7 +17,7 @@ public class LotteryController {
     private LotteryService lotteryService;
 
     @GetMapping("/win")
-    public String win(String userId) {
+    public String win(String userId) throws Exception {
         if(StringUtils.isEmpty(userId)) {
             return "用户ID不能为空";
         }
