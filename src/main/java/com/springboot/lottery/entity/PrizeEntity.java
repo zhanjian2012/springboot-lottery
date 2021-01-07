@@ -18,6 +18,6 @@ public class PrizeEntity implements java.io.Serializable{
     private Integer surplusStock;
 
     //概率
-    private double percentage;
+    private Integer percentage;
 
 }
