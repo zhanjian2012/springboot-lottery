@@ -144,10 +144,16 @@ public class LoadPrizeInfoRunner implements CommandLineRunner {
         for (int m = 0; m < prizeNum; m++) {
             int rand = new Random().nextInt(percentage);
             int temp = 0;
-            for (PrizeEntity prizeEntity : list) {
+            for (PrizeEntity prizeEntity: list) {
                 temp += prizeEntity.getPercentage();
-                if (rand <= temp) {
+                if (rand < temp) {
                     ids.add(prizeEntity.getId().toString());
+                    prizeEntity.setSurplusStock(prizeEntity.getSurplusStock()-1);
+
+                    if(prizeEntity.getSurplusStock() == 0) {
+                        list.remove(prizeEntity);
+                        percentage = percentage - prizeEntity.getPercentage();
+                    }
                     break;
                 }
             }
