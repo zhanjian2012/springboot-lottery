@@ -43,7 +43,7 @@ public class LoadPrizeInfoRunner implements CommandLineRunner {
                 prizeEntity.setPrizeType(2);
                 prizeEntity.setPercentage(i);
             }
-            prizeEntity.setSurplusStock(i * 10);
+            prizeEntity.setSurplusStock(i * 100);
             list.add(prizeEntity);
         }
         return list;
