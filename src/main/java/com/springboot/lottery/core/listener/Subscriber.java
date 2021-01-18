@@ -22,30 +22,8 @@ public class Subscriber implements MessageListener {
     @Value("${lottery.activity.id:}")
     private String activityId;
 
-//    @Override
-//    public void onMessage(String message) {
-//        System.out.println(message);
-
-//        String prizeKey = String.format(RedisConstants.ACTIVITY_PRIZE_LIST, activityId);
-//        PrizeEntity prizeEntity = (PrizeEntity) redisTemplate.opsForHash().get(prizeKey, );
-
-//        String prizeKey = String.format(RedisConstants.ACTIVITY_PRIZE_LIST, activityId);
-//        PrizeEntity prizeEntity = (PrizeEntity) redisTemplate.opsForHash().get(prizeKey, new String(body));
-//        log.error("抽中奖品：{}", prizeEntity);
-//        if (Objects.nonNull(prizeEntity)) {
-//            String prizeInfoKey = String.format(RedisConstants.ACTIVITY_PRIZED, activityId, msg);
-//            redisTemplate.opsForValue().increment(prizeInfoKey);
-//        }
-//
-//        System.out.println("1 - "+msg);
-//        System.out.println("1 - "+topic);
-
-//    }
-
     @Override
     public void onMessage(Message message, byte[] pattern) {
-//        JSONObject exJson = JSONObject.parseObject(jsonMsg);
-//        User user = JSON.toJavaObject(exJson, User.class);
 
         byte[] body = message.getBody();
         String msgBody = (String) redisTemplate.getValueSerializer().deserialize(body);
@@ -59,7 +37,5 @@ public class Subscriber implements MessageListener {
             String prizeInfoKey = String.format(RedisConstants.ACTIVITY_PRIZED, activityId, msgBody);
             redisTemplate.opsForValue().increment(prizeInfoKey);
         }
-
-
     }
 }
